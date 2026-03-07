@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cli-bg: #050505;
+  --color-cli-black: #0a0a0a;
+  --color-cli-gray-dark: #1a1a1a;
+  --color-cli-gray: #333333;
+  --color-cli-gray-light: #555555;
+  --color-cli-white: #e0e0e0;
+
+  --color-cli-green: #00ff41;
+  --color-cli-green-dim: #008f11;
+  --color-cli-amber: #ffb000;
+  --color-cli-cyan: #00e5ff;
+  --color-cli-red: #ff3333;
+
+  --color-cli-glow: rgba(0, 255, 65, 0.4);
+  --color-cli-glow-cyan: rgba(0, 229, 255, 0.4);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-cli-green-dim) transparent;
+    border-radius: 0 !important;
+    /* Force sharp edges everywhere */
+  }
+
+  body {
+    @apply bg-cli-bg text-cli-green font-mono antialiased;
+    min-height: 100vh;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+
+  /* CLI CRT Scanline Effect */
+  body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%);
+    z-index: 999;
+    background-size: 100% 4px;
+    pointer-events: none;
+  }
+
+  ::selection {
+    background: var(--color-cli-green);
+    color: var(--color-cli-bg);
+  }
+
+  input,
+  textarea,
+  button {
+    @apply font-mono;
+    border-radius: 0 !important;
+  }
+}
+
+/* ── CLI specific classes ────────────────────────────────────────── */
+
+.text-shadow-glow {
+  text-shadow: 0 0 5px var(--color-cli-glow);
+}
+
+.cli-border {
+  border: 1px solid var(--color-cli-gray);
+}
+
+.cli-border-active {
+  border: 1px solid var(--color-cli-green);
+  box-shadow: 0 0 15px var(--color-cli-glow), inset 0 0 10px var(--color-cli-glow);
+}
+
+.cli-text-dim {
+  color: var(--color-cli-gray-light);
+}
+
+.cli-panel {
+  @apply bg-cli-black border border-cli-gray p-4 relative overflow-hidden;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cli-button {
+  @apply px-4 py-2 bg-transparent text-cli-green border border-cli-green relative overflow-hidden transition-all duration-300;
+  box-shadow: 0 0 5px var(--color-cli-glow);
+  text-shadow: 0 0 8px var(--color-cli-glow);
+}
+
+.cli-button:hover:not(:disabled) {
+  @apply bg-cli-green text-cli-bg border-cli-green;
+  box-shadow: 0 0 20px var(--color-cli-green), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: none;
+}
+
+.cli-button:disabled {
+  @apply border-cli-gray text-cli-gray cursor-not-allowed shadow-none;
+  text-shadow: none;
+}
+
+.cli-button-secondary {
+  @apply px-4 py-2 bg-transparent text-cli-cyan border border-cli-gray transition-all shadow-none duration-300;
+}
+
+.cli-button-secondary:hover:not(:disabled) {
+  @apply border-cli-cyan text-cli-bg bg-cli-cyan;
+  box-shadow: 0 0 20px var(--color-cli-cyan), inset 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cli-button-secondary:disabled {
+  @apply border-cli-gray text-cli-gray cursor-not-allowed shadow-none;
+}
+
+/* ── Input ────────────────────────────────────────────────────────── */
+
+.cli-input {
+  @apply w-full bg-transparent text-cli-green border-none focus:outline-none focus:ring-0;
+  caret-color: var(--color-cli-green);
+}
+
+.cli-input::placeholder {
+  @apply text-cli-gray-light;
+}
+
+/* ── Markdown preview prose (man page style) ─────────────────────── */
+
+.markdown-body {
+  @apply text-cli-white leading-relaxed;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  @apply font-bold text-cli-green uppercase mt-6 mb-3;
+}
+
+.markdown-body h1 {
+  @apply text-xl border-b border-cli-green pb-1;
+}
+
+.markdown-body h2 {
+  @apply text-lg border-b border-cli-gray pb-1;
+}
+
+.markdown-body h3 {
+  @apply text-base text-cli-amber;
+}
+
+.markdown-body p {
+  @apply mb-4;
+}
+
+.markdown-body a {
+  @apply text-cli-cyan underline underline-offset-2;
+}
+
+.markdown-body a:hover {
+  @apply bg-cli-cyan text-cli-bg no-underline;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  @apply mb-4 pl-6;
+}
+
+.markdown-body li {
+  @apply mb-1;
+}
+
+.markdown-body ul li {
+  list-style-type: square;
+  color: var(--color-cli-green);
+}
+
+.markdown-body ul li span {
+  color: var(--color-cli-white);
+  /* Keep text white while bullet is green */
+}
+
+.markdown-body code {
+  @apply px-1.5 py-0.5 bg-cli-gray-dark text-cli-amber;
+}
+
+.markdown-body pre {
+  @apply mb-4 p-4 overflow-x-auto bg-cli-gray-dark border border-cli-gray text-cli-white;
+}
+
+.markdown-body pre code {
+  @apply p-0 bg-transparent text-cli-white;
+}
+
+.markdown-body blockquote {
+  @apply mb-4 pl-4 text-cli-gray-light border-l-2 border-cli-gray-light;
+}
+
+.markdown-body table {
+  @apply w-full mb-4 text-sm border-collapse;
+}
+
+.markdown-body th {
+  @apply text-left font-bold text-cli-green px-4 py-2 border border-cli-gray bg-cli-gray-dark;
+}
+
+.markdown-body td {
+  @apply px-4 py-2 border border-cli-gray;
+}
+
+.markdown-body hr {
+  @apply my-6 border-cli-gray border-dashed;
+}
+
+.markdown-body strong {
+  @apply font-bold text-cli-white;
+}
+
+.markdown-body img {
+  @apply border border-cli-gray max-w-full;
+}
+
+/* ── Editor (Vim style) ──────────────────────────────────────────── */
+
+.editor-textarea {
+  @apply w-full h-full p-4 bg-transparent text-cli-green resize-none outline-none;
+  tab-size: 2;
+  line-height: 1.5;
+}
+
+/* ── Animations ──────────────────────────────────────────────────── */
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes matrix-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-matrix {
+  animation: matrix-fade 0.15s ease-out forwards;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0)
+  }
+
+  20% {
+    transform: translate(-2px, 2px)
+  }
+
+  40% {
+    transform: translate(-2px, -2px)
+  }
+
+  60% {
+    transform: translate(2px, 2px)
+  }
+
+  80% {
+    transform: translate(2px, -2px)
+  }
+
+  100% {
+    transform: translate(0)
+  }
+}
+
+.hover\:animate-glitch:hover {
+  animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: #fff;
+  text-shadow: 2px 0 var(--color-cli-red), -2px 0 var(--color-cli-cyan);
+}
+
+/* ── Split view specific ─────────────────────────────────────────── */
+
+.tmux-pane-border {
+  @apply border-cli-gray;
+}
+
+.tmux-pane-active {
+  @apply border-cli-green;
+}

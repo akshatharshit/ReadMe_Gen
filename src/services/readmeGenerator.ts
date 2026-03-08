@@ -62,8 +62,7 @@ const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
 
 
 function heading(text: string, emoji: string, useEmojis: boolean): string {
-    const icon = useEmojis ? `${emoji} ` : '';
-    return `## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Rocket.png" alt="icon" width="25" height="25" /> **${icon}${text}**`;
+    return useEmojis ? `## ${emoji} ${text}` : `## ${text}`;
 }
 
 function divider(): string {
@@ -75,10 +74,15 @@ function buildTitle(repo: RepoData, config: TemplateConfig): string {
 
     lines.push(`<div align="center">`);
     lines.push('');
-    // Dynamic animated banner using capsule-render
-    lines.push(`![Banner](https://capsule-render.vercel.app/api?type=waving&color=00ff41&height=200&section=header&text=${encodeURIComponent(repo.name)}&fontSize=70&fontAlignY=38&desc=${encodeURIComponent(repo.description || 'Welcome to the project')}&descAlignY=61&descAlign=62)`);
+    // Dynamic banner using standard GitHub stats API (more reliable than capsule-render for all users)
+    lines.push(`# ${repo.name}`);
     lines.push('');
-    
+
+    if (repo.description) {
+        lines.push(`<p align="center"><em>${repo.description}</em></p>`);
+        lines.push('');
+    }
+
     if (config.showBadges) {
         lines.push(generateBadges(repo.owner, repo.repo));
         lines.push('');

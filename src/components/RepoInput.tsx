@@ -27,9 +27,11 @@ export default function RepoInput() {
                         onFocus={() => setFocused(true)}
                         onBlur={() => setFocused(false)}
                         placeholder="github.com/owner/repository"
-                        className="cli-input text-base py-2 flex-1"
+                        className="cli-input text-base py-2 flex-1 mt-1 font-bold tracking-widest text-[#00ff41]"
                         disabled={loading}
-                        autoFocus
+                        autoComplete="off"
+                        spellCheck="false"
+                        name="repo_url_manual_entry"
                     />
                     <button
                         type="submit"
@@ -64,6 +66,8 @@ export default function RepoInput() {
                         value={useReadmeStore((s) => s.pat) || ''}
                         onChange={(e) => useReadmeStore.getState().setPat(e.target.value || null)}
                         disabled={loading}
+                        autoComplete="new-password"
+                        name="github_pat_manual"
                         className="cli-input border-b border-cli-gray focus:border-cli-green w-40 px-1 py-0.5 text-xs text-cli-green"
                     />
                 </div>

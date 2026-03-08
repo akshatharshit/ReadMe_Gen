@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cli-bg: #030303;
-  --color-cli-black: #080808;
-  --color-cli-gray-dark: #121212;
-  --color-cli-gray: #242424;
-  --color-cli-gray-light: #444444;
-  --color-cli-white: #e0e0e0;
+  --color-cli-bg: #050505;
+  --color-cli-black: #0a0a0a;
+  --color-cli-gray-dark: #1a1a1a;
+  --color-cli-gray: #4a4a4a;
+  --color-cli-gray-light: #888888;
+  --color-cli-white: #f0f0f0;
 
   --color-cli-green: #00ff41;
   --color-cli-green-dim: #008f11;
@@ -15,9 +15,9 @@
   --color-cli-red: #ff3333;
   --color-cli-purple: #b538ff;
 
-  --color-cli-glow: rgba(0, 255, 65, 0.6);
-  --color-cli-glow-cyan: rgba(0, 229, 255, 0.6);
-  --color-cli-glow-purple: rgba(181, 56, 255, 0.5);
+  --color-cli-glow: rgba(0, 255, 65, 0.4);
+  --color-cli-glow-cyan: rgba(0, 229, 255, 0.4);
+  --color-cli-glow-purple: rgba(181, 56, 255, 0.4);
 
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
 }
@@ -32,24 +32,28 @@
     width: 6px;
     height: 6px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--color-cli-black);
     border-left: 1px solid var(--color-cli-gray);
   }
+
   ::-webkit-scrollbar-thumb {
     background: var(--color-cli-green-dim);
     box-shadow: 0 0 10px var(--color-cli-glow);
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-cli-green);
   }
 
   body {
     @apply text-cli-green font-mono antialiased;
-    background: radial-gradient(circle at center, #0a110a 0%, var(--color-cli-bg) 100%);
+    background: #050505;
+    background: radial-gradient(circle at center, #0a100a 0%, var(--color-cli-bg) 100%);
     min-height: 100vh;
     font-size: 14px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     position: relative;
   }
 
@@ -63,7 +67,7 @@
     bottom: 0;
     right: 0;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%,
-        rgba(0, 0, 0, 0.25) 50%);
+        rgba(0, 0, 0, 0.1) 50%);
     z-index: 999;
     background-size: 100% 4px;
     pointer-events: none;
@@ -85,23 +89,28 @@
 /* ── CLI specific classes ────────────────────────────────────────── */
 
 .text-shadow-glow {
-  text-shadow: 0 0 8px var(--color-cli-glow), 0 0 16px var(--color-cli-glow-cyan);
+  text-shadow: 0 0 5px var(--color-cli-glow);
 }
 
 .cli-border {
   border: 1px solid var(--color-cli-gray);
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
 }
 
 .cli-border-active {
   border: 1px solid var(--color-cli-green);
-  box-shadow: 0 0 20px var(--color-cli-glow), inset 0 0 15px var(--color-cli-glow);
-  animation: border-pulse 2s infinite alternate;
+  box-shadow: 0 0 10px var(--color-cli-glow), inset 0 0 5px var(--color-cli-glow);
+  animation: border-pulse 3s infinite alternate;
 }
 
 @keyframes border-pulse {
-  0% { box-shadow: 0 0 10px var(--color-cli-glow), inset 0 0 5px var(--color-cli-glow); }
-  100% { box-shadow: 0 0 25px var(--color-cli-glow), inset 0 0 15px var(--color-cli-glow); border-color: #55ff77; }
+  0% {
+    box-shadow: 0 0 5px var(--color-cli-glow), inset 0 0 2px var(--color-cli-glow);
+  }
+
+  100% {
+    box-shadow: 0 0 15px var(--color-cli-glow), inset 0 0 8px var(--color-cli-glow);
+    border-color: #33ff55;
+  }
 }
 
 .cli-text-dim {
@@ -110,17 +119,18 @@
 
 .cli-panel {
   @apply bg-cli-black border border-cli-gray p-4 relative overflow-hidden transition-all duration-300;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 255, 65, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
+
 .cli-panel:hover {
   border-color: var(--color-cli-green-dim);
-  box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1), inset 0 0 30px rgba(0, 255, 65, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 255, 65, 0.05);
 }
 
 .cli-button {
   @apply px-4 py-2 bg-cli-black text-cli-green border border-cli-green relative overflow-hidden transition-all duration-300;
-  box-shadow: 0 0 8px var(--color-cli-glow);
-  text-shadow: 0 0 5px var(--color-cli-glow);
+  box-shadow: 0 0 5px var(--color-cli-glow);
+  text-shadow: 0 0 2px var(--color-cli-green);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: bold;
@@ -134,7 +144,7 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, var(--color-cli-glow), transparent);
-  transition:all 0.4s ease;
+  transition: all 0.4s ease;
   z-index: 0;
 }
 
@@ -144,14 +154,14 @@
 
 .cli-button:hover:not(:disabled) {
   @apply bg-cli-green text-cli-bg border-cli-green;
-  box-shadow: 0 0 25px var(--color-cli-green), 0 0 40px var(--color-cli-glow), inset 0 0 15px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px var(--color-cli-green), 0 0 20px var(--color-cli-glow);
   text-shadow: none;
   transform: translateY(-1px);
 }
 
 .cli-button:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 0 10px var(--color-cli-green);
+  box-shadow: 0 0 5px var(--color-cli-green);
 }
 
 .cli-button:disabled {

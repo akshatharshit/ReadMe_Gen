@@ -60,8 +60,14 @@ const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
 
 // ── Section builders ───────────────────────────────────────────────
 
+
 function heading(text: string, emoji: string, useEmojis: boolean): string {
-    return useEmojis ? `## ${emoji} ${text}` : `## ${text}`;
+    const icon = useEmojis ? `${emoji} ` : '';
+    return `## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Rocket.png" alt="icon" width="25" height="25" /> **${icon}${text}**`;
+}
+
+function divider(): string {
+    return `<br>\n<p align="center"><img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" alt="divider" width="100%" /></p>\n<br>`;
 }
 
 function buildTitle(repo: RepoData, config: TemplateConfig): string {
@@ -69,14 +75,10 @@ function buildTitle(repo: RepoData, config: TemplateConfig): string {
 
     lines.push(`<div align="center">`);
     lines.push('');
-    lines.push(`# ${repo.name}`);
+    // Dynamic animated banner using capsule-render
+    lines.push(`![Banner](https://capsule-render.vercel.app/api?type=waving&color=00ff41&height=200&section=header&text=${encodeURIComponent(repo.name)}&fontSize=70&fontAlignY=38&desc=${encodeURIComponent(repo.description || 'Welcome to the project')}&descAlignY=61&descAlign=62)`);
     lines.push('');
-
-    if (repo.description) {
-        lines.push(`<p align="center"><em>${repo.description}</em></p>`);
-        lines.push('');
-    }
-
+    
     if (config.showBadges) {
         lines.push(generateBadges(repo.owner, repo.repo));
         lines.push('');
@@ -89,11 +91,13 @@ function buildTitle(repo: RepoData, config: TemplateConfig): string {
     }
 
     if (repo.homepage) {
-        lines.push(`[🌐 Live Demo](${repo.homepage})`);
+        lines.push(`### [🌐 Live Demo](${repo.homepage})`);
         lines.push('');
     }
 
     lines.push(`</div>`);
+    lines.push('');
+    lines.push(divider());
     lines.push('');
 
     return lines.join('\n');
@@ -135,31 +139,33 @@ function buildOverview(repo: RepoData, analysis: AnalysisResult, config: Templat
 }
 
 function buildFeatures(analysis: AnalysisResult, config: TemplateConfig): string {
-    const features: string[] = [];
+    const features: { name: string, desc: string }[] = [];
 
     if (analysis.techStack.length > 0) {
-        features.push(`Built with ${analysis.techStack.map((t) => `**${t.name}**`).join(', ')}`);
+        features.push({ name: 'Modern Tech Stack', desc: `Built with ${analysis.techStack.map((t) => `**${t.name}**`).join(', ')}` });
     }
     if (analysis.databases.length > 0) {
-        features.push(`${analysis.databases.map((d) => d.name).join(', ')} database integration`);
+        features.push({ name: 'Robust Database', desc: `${analysis.databases.map((d) => d.name).join(', ')} database integration` });
     }
     if (analysis.authLibs.length > 0) {
-        features.push(`Authentication via ${analysis.authLibs.map((a) => a.name).join(', ')}`);
+        features.push({ name: 'Secure Authentication', desc: `Authentication via ${analysis.authLibs.map((a) => a.name).join(', ')}` });
     }
     if (analysis.realtimeLibs.length > 0) {
-        features.push(`Real-time features with ${analysis.realtimeLibs.map((r) => r.name).join(', ')}`);
+        features.push({ name: 'Real-time Capabilities', desc: `Real-time features with ${analysis.realtimeLibs.map((r) => r.name).join(', ')}` });
     }
-    if (analysis.hasTests) features.push('Comprehensive test suite');
-    if (analysis.hasDocker) features.push('Docker containerization');
-    if (analysis.hasCi) features.push('CI/CD pipeline configured');
+    if (analysis.hasTests) features.push({ name: 'Reliability', desc: 'Comprehensive test suite for robust code quality' });
+    if (analysis.hasDocker) features.push({ name: 'Containerized', desc: 'Docker support for seamless local development and deployment' });
+    if (analysis.hasCi) features.push({ name: 'Automated Workflows', desc: 'CI/CD pipeline configured for continuous integration' });
 
     if (features.length === 0) return '';
 
     const lines: string[] = [];
     lines.push(heading('Features', '✨', config.useEmojis));
     lines.push('');
+    lines.push('| Feature | Description |');
+    lines.push('| :--- | :--- |');
     for (const f of features) {
-        lines.push(`- ${f}`);
+        lines.push(`| ⚡ **${f.name}** | ${f.desc} |`);
     }
     lines.push('');
     return lines.join('\n');
@@ -209,9 +215,13 @@ function buildArchitecture(analysis: AnalysisResult, config: TemplateConfig): st
     const lines: string[] = [];
     lines.push(heading('Project Structure', '🏗️', config.useEmojis));
     lines.push('');
-    lines.push('```');
+    lines.push('<details>');
+    lines.push('<summary><b>📁 Toggle Directory Tree</b></summary>');
+    lines.push('<br>');
+    lines.push('```bash');
     lines.push(analysis.folderTree);
     lines.push('```');
+    lines.push('</details>');
     lines.push('');
     return lines.join('\n');
 }
@@ -330,8 +340,12 @@ function buildApiEndpoints(analysis: AnalysisResult, config: TemplateConfig): st
     const lines: string[] = [];
     lines.push(heading('API Reference', '🔌', config.useEmojis));
     lines.push('');
-    lines.push('> API endpoints are available in the `/routes` or `/controllers` directory.');
-    lines.push('> Please refer to the source code for detailed endpoint documentation.');
+    lines.push('<details>');
+    lines.push('<summary><b>🔗 View API Details</b></summary>');
+    lines.push('<br>');
+    lines.push('> API endpoints are mapped and available in the `/routes` or `/controllers` directory.');
+    lines.push('> Please refer to the source code for highly detailed endpoint documentation and request/response schemas.');
+    lines.push('</details>');
     lines.push('');
     return lines.join('\n');
 }
@@ -385,13 +399,15 @@ function buildLicense(repo: RepoData, config: TemplateConfig): string {
 
 function buildSupport(repo: RepoData, config: TemplateConfig): string {
     const lines: string[] = [];
-    lines.push(heading('Support', '💬', config.useEmojis));
+    lines.push(heading('Support & Contact', '💬', config.useEmojis));
     lines.push('');
     lines.push(`If you found this project helpful, please consider giving it a ⭐ on [GitHub](https://github.com/${repo.owner}/${repo.repo})!`);
     lines.push('');
-    lines.push('---');
+    lines.push('For support, business inquiries, or to report an issue, please open an issue in the repository or contact the maintainer.');
     lines.push('');
-    lines.push(`<p align="center">Made with ❤️ by <a href="https://github.com/${repo.owner}">@${repo.owner}</a></p>`);
+    lines.push(divider());
+    lines.push('');
+    lines.push(`<p align="center">Made with ❤️ by <a href="https://github.com/${repo.owner}"><b>@${repo.owner}</b></a></p>`);
     lines.push('');
     return lines.join('\n');
 }

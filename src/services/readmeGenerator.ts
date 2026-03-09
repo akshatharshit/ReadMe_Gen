@@ -21,6 +21,12 @@ interface TemplateConfig {
     showArchitecture: boolean;
     showContributors: boolean;
     verbose: boolean;
+    useAnimations?: boolean;
+    showStats?: boolean;
+    showFeedbackLinks?: boolean;
+    showRoadmap?: boolean;
+    showFaq?: boolean;
+    showAcknowledgments?: boolean;
 }
 
 const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
@@ -56,6 +62,20 @@ const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
         showContributors: true,
         verbose: true,
     },
+    godtier: {
+        useEmojis: true,
+        showBadges: true,
+        showToc: true,
+        showArchitecture: true,
+        showContributors: true,
+        verbose: true,
+        useAnimations: true,
+        showStats: true,
+        showFeedbackLinks: true,
+        showRoadmap: true,
+        showFaq: true,
+        showAcknowledgments: true,
+    },
 };
 
 // ── Section builders ───────────────────────────────────────────────
@@ -72,13 +92,23 @@ function divider(): string {
 function buildTitle(repo: RepoData, config: TemplateConfig): string {
     const lines: string[] = [];
 
-    lines.push(`<div align="center">`);
-    lines.push('');
-    // Dynamic banner using standard GitHub stats API (more reliable than capsule-render for all users)
-    lines.push(`# ${repo.name}`);
+    lines.push('<div align="center">');
     lines.push('');
 
-    if (repo.description) {
+    // Dynamic banner using typing SVG for animations
+    if (config.useAnimations) {
+        // Fallback text is repo description
+        const descText = repo.description ? encodeURIComponent(repo.description) : 'An awesome project!';
+        lines.push(`  <a href="${repo.homepage || `https://github.com/${repo.owner}/${repo.repo}`}">`);
+        lines.push(`    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=40&pause=1000&color=2ecc71&center=true&vCenter=true&width=800&height=100&lines=${encodeURIComponent(repo.name)};${descText}" alt="Typing SVG" />`);
+        lines.push(`  </a>`);
+        lines.push('');
+    } else {
+        lines.push(`# ${repo.name}`);
+        lines.push('');
+    }
+
+    if (repo.description && !config.useAnimations) {
         lines.push(`<p align="center"><em>${repo.description}</em></p>`);
         lines.push('');
     }
@@ -367,20 +397,29 @@ function buildContributing(repo: RepoData, config: TemplateConfig): string {
     lines.push(`5. **Open** a Pull Request`);
     lines.push('');
 
-    if (config.showContributors && repo.contributors.length > 0) {
-        lines.push('### Contributors');
-        lines.push('');
-        lines.push('<table>');
-        lines.push('<tr>');
-        const top = repo.contributors.slice(0, 8);
-        for (const c of top) {
-            lines.push(
-                `<td align="center"><a href="https://github.com/${c.login}"><img src="${c.avatarUrl}" width="60" alt="${c.login}"/><br/><sub><b>${c.login}</b></sub></a></td>`
-            );
+    if (config.showContributors) {
+        if (config.useAnimations) {
+            lines.push('### Contributors');
+            lines.push('');
+            lines.push(`<a href="https://github.com/${repo.owner}/${repo.repo}/graphs/contributors">`);
+            lines.push(`  <img src="https://contrib.rocks/image?repo=${repo.owner}/${repo.repo}" alt="Contributors" />`);
+            lines.push(`</a>`);
+            lines.push('');
+        } else if (repo.contributors.length > 0) {
+            lines.push('### Contributors');
+            lines.push('');
+            lines.push('<table>');
+            lines.push('<tr>');
+            const top = repo.contributors.slice(0, 8);
+            for (const c of top) {
+                lines.push(
+                    `<td align="center"><a href="https://github.com/${c.login}"><img src="${c.avatarUrl}" width="60" alt="${c.login}"/><br/><sub><b>${c.login}</b></sub></a></td>`
+                );
+            }
+            lines.push('</tr>');
+            lines.push('</table>');
+            lines.push('');
         }
-        lines.push('</tr>');
-        lines.push('</table>');
-        lines.push('');
     }
 
     return lines.join('\n');
@@ -416,6 +455,89 @@ function buildSupport(repo: RepoData, config: TemplateConfig): string {
     return lines.join('\n');
 }
 
+function buildStats(repo: RepoData, config: TemplateConfig): string {
+    if (!config.showStats) return '';
+    const lines: string[] = [];
+    lines.push(heading('GitHub Stats', '📊', config.useEmojis));
+    lines.push('');
+    lines.push(`<div align="center">`);
+    lines.push(`  <img src="https://github-readme-stats.vercel.app/api?username=${repo.owner}&repo=${repo.repo}&show_icons=true&theme=radical&hide_border=true&bg_color=0D1117&text_color=c9d1d9&title_color=58a6ff" alt="GitHub Stats" />`);
+    lines.push(`  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${repo.owner}&theme=radical&layout=compact&hide_border=true&bg_color=0D1117&text_color=c9d1d9&title_color=58a6ff" alt="Top Languages" />`);
+    lines.push(`</div>`);
+    lines.push('');
+    return lines.join('\n');
+}
+
+function buildScreenshots(config: TemplateConfig): string {
+    if (!config.useAnimations) return '';
+    const lines: string[] = [];
+    lines.push(heading('Screenshots', '📸', config.useEmojis));
+    lines.push('');
+    lines.push('> Add your screenshots here. The image below is a placeholder!');
+    lines.push('');
+    lines.push(`<div align="center">`);
+    lines.push(`  <img src="https://via.placeholder.com/800x400.png?text=Project+Screenshot+or+GIF" alt="Project Screenshot" width="800" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />`);
+    lines.push(`</div>`);
+    lines.push('');
+    return lines.join('\n');
+}
+
+function buildFeedbackLinks(repo: RepoData, config: TemplateConfig): string {
+    if (!config.showFeedbackLinks) return '';
+    const lines: string[] = [];
+    lines.push(heading('Feedback & Issues', '🐛', config.useEmojis));
+    lines.push('');
+    lines.push(`Have feedback or found a bug? We'd love to hear from you!`);
+    lines.push('');
+    lines.push(`- [Report a Bug](https://github.com/${repo.owner}/${repo.repo}/issues/new?assignees=&labels=bug&template=bug_report.md&title=)`);
+    lines.push(`- [Request a Feature](https://github.com/${repo.owner}/${repo.repo}/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=)`);
+    lines.push('');
+    return lines.join('\n');
+}
+
+function buildRoadmap(config: TemplateConfig): string {
+    if (!config.showRoadmap) return '';
+    const lines: string[] = [];
+    lines.push(heading('Roadmap', '🛣️', config.useEmojis));
+    lines.push('');
+    lines.push(`- [x] **Phase 1**: Initial Release & Core Features`);
+    lines.push(`- [ ] **Phase 2**: Extended Functionality`);
+    lines.push(`- [ ] **Phase 3**: Community Integrations & Ecosystem`);
+    lines.push('');
+    return lines.join('\n');
+}
+
+function buildFaq(config: TemplateConfig): string {
+    if (!config.showFaq) return '';
+    const lines: string[] = [];
+    lines.push(heading('FAQ', '❓', config.useEmojis));
+    lines.push('');
+    lines.push(`<details>`);
+    lines.push(`  <summary><b>Why should I use this project?</b></summary>`);
+    lines.push(`  <br/>`);
+    lines.push(`  Because it's awesome and will save you tons of time!`);
+    lines.push(`</details>`);
+    lines.push('');
+    lines.push(`<details>`);
+    lines.push(`  <summary><b>How do I contribute?</b></summary>`);
+    lines.push(`  <br/>`);
+    lines.push(`  Check out the <a href="#contributing">Contributing</a> section for details.`);
+    lines.push(`</details>`);
+    lines.push('');
+    return lines.join('\n');
+}
+
+function buildAcknowledgments(config: TemplateConfig): string {
+    if (!config.showAcknowledgments) return '';
+    const lines: string[] = [];
+    lines.push(heading('Acknowledgments', '🎉', config.useEmojis));
+    lines.push('');
+    lines.push(`- [Awesome Project](https://github.com/awesome/project)`);
+    lines.push(`- [Cool Resource](https://example.com)`);
+    lines.push('');
+    return lines.join('\n');
+}
+
 // ── Main generator ─────────────────────────────────────────────────
 
 export function generateReadme(
@@ -428,7 +550,9 @@ export function generateReadme(
 
     // Build all section strings
     const title = buildTitle(repo, config);
+    const stats = buildStats(repo, config);
     const overview = buildOverview(repo, analysis, config);
+    const screenshots = buildScreenshots(config);
     const features = buildFeatures(analysis, config);
     const techStack = buildTechStack(analysis, repo, config);
     const architecture = buildArchitecture(analysis, config);
@@ -437,13 +561,19 @@ export function generateReadme(
     const envVars = buildEnvVars(repo, config);
     const depTable = buildDependencyTable(analysis, config);
     const apiRef = buildApiEndpoints(analysis, config);
+    const roadmap = buildRoadmap(config);
     const contributing = buildContributing(repo, config);
+    const feedback = buildFeedbackLinks(repo, config);
+    const faq = buildFaq(config);
     const license = buildLicense(repo, config);
+    const acknowledgments = buildAcknowledgments(config);
     const support = buildSupport(repo, config);
 
     // Collect section names for TOC
     const tocSections: string[] = [];
+    if (stats) tocSections.push('GitHub Stats');
     if (overview) tocSections.push('Overview');
+    if (screenshots) tocSections.push('Screenshots');
     if (features) tocSections.push('Features');
     if (techStack) tocSections.push('Tech Stack');
     if (architecture) tocSections.push('Project Structure');
@@ -452,14 +582,20 @@ export function generateReadme(
     if (envVars) tocSections.push('Environment Variables');
     if (depTable) tocSections.push('Key Dependencies');
     if (apiRef) tocSections.push('API Reference');
+    if (roadmap) tocSections.push('Roadmap');
     tocSections.push('Contributing');
+    if (feedback) tocSections.push('Feedback & Issues');
+    if (faq) tocSections.push('FAQ');
     tocSections.push('License');
+    if (acknowledgments) tocSections.push('Acknowledgments');
     tocSections.push('Support');
 
     // Assemble
     sections.push(title);
+    if (stats) sections.push(stats);
     if (config.showToc) sections.push(buildToc(tocSections));
     if (overview) sections.push(overview);
+    if (screenshots) sections.push(screenshots);
     if (features) sections.push(features);
     if (techStack) sections.push(techStack);
     if (architecture) sections.push(architecture);
@@ -468,8 +604,12 @@ export function generateReadme(
     if (envVars) sections.push(envVars);
     if (depTable) sections.push(depTable);
     if (apiRef) sections.push(apiRef);
+    if (roadmap) sections.push(roadmap);
     sections.push(contributing);
+    if (feedback) sections.push(feedback);
+    if (faq) sections.push(faq);
     sections.push(license);
+    if (acknowledgments) sections.push(acknowledgments);
     sections.push(support);
 
     // Post-process: remove double blank lines

@@ -86,7 +86,7 @@ export interface AnalysisResult {
 
 // ── README template types ──────────────────────────────────────────
 
-export type ReadmeTemplate = 'professional' | 'startup' | 'minimal' | 'opensource';
+export type ReadmeTemplate = 'professional' | 'startup' | 'minimal' | 'opensource' | 'godtier';
 
 // ── App state ──────────────────────────────────────────────────────
 

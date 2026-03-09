@@ -2,6 +2,7 @@ import { useReadmeStore } from '../store/readmeStore';
 import type { ReadmeTemplate } from '../types';
 
 const templates = [
+    { id: 'godtier', label: 'God Tier', desc: 'Maximum everything. Animated, beautiful.' },
     { id: 'professional', label: 'Professional', desc: 'Full-featured w/ architecture' },
     { id: 'startup', label: 'Startup', desc: 'Marketing focused & clean' },
     { id: 'minimal', label: 'Minimal', desc: 'Just the essentials' },
@@ -27,8 +28,8 @@ export default function TemplateSelector() {
                             key={id}
                             onClick={() => setTemplate(id as ReadmeTemplate)}
                             className={`flex flex-col text-left p-3 border transition-colors ${isActive
-                                    ? 'border-cli-green bg-cli-green/5'
-                                    : 'border-cli-gray hover:border-cli-gray-light'
+                                ? 'border-cli-green bg-cli-green/5'
+                                : 'border-cli-gray hover:border-cli-gray-light'
                                 }`}
                         >
                             <div className="flex items-center gap-3 w-full mb-1">

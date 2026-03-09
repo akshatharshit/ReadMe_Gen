@@ -11,6 +11,7 @@ import { buildTree } from '../utils/treeBuilder';
 
 // ── Merge all deps from package.json ───────────────────────────────
 
+//getting all the dependencies from the package.json
 function getAllDeps(data: RepoData): Record<string, string> {
     const pkg = data.packageJson;
     if (!pkg) return {};

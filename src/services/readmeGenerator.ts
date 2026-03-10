@@ -250,14 +250,16 @@ function buildArchitecture(analysis: AnalysisResult, config: TemplateConfig): st
     if (!config.showArchitecture || !analysis.folderTree) return '';
 
     const lines: string[] = [];
-    lines.push(heading('Project Structure', '🏗️', config.useEmojis));
+    lines.push(heading('Project Structure', '📁', config.useEmojis));
     lines.push('');
-    lines.push('<details>');
-    lines.push('<summary><b>📁 Toggle Directory Tree</b></summary>');
+    lines.push('<details open>');
+    lines.push('<summary><b>Toggle Directory Tree</b></summary>');
     lines.push('<br>');
-    lines.push('```bash');
+    lines.push('');
+    lines.push('```');
     lines.push(analysis.folderTree);
     lines.push('```');
+    lines.push('');
     lines.push('</details>');
     lines.push('');
     return lines.join('\n');

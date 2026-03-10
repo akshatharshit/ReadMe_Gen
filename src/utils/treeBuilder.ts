@@ -1,10 +1,11 @@
 import type { RepoContent } from '../types';
 
 /**
- * Build an ASCII folder tree string from a flat list of repo contents.
- * Limits depth to keep output readable.
+ * Build a clean ASCII folder tree string from a flat list of repo contents.
+ * Uses plain text connectors (├──, └──, │) for proper rendering inside
+ * markdown code blocks. No emojis — they break monospace alignment.
  */
-export function buildTree(contents: RepoContent[], maxDepth = 3): string {
+export function buildTree(contents: RepoContent[], maxDepth = 5): string {
     // Build a nested map
     interface TreeNode {
         name: string;
@@ -38,17 +39,20 @@ export function buildTree(contents: RepoContent[], maxDepth = 3): string {
         }
     }
 
-    // Render
+    // Render as clean ASCII tree
     function render(node: TreeNode, prefix: string, isLast: boolean, isRoot: boolean): string[] {
         const lines: string[] = [];
-        if (!isRoot) {
+
+        if (isRoot) {
+            lines.push('.');
+        } else {
             const connector = isLast ? '└── ' : '├── ';
-            const icon = node.isDir ? '📁 ' : '📄 ';
-            lines.push(prefix + connector + icon + node.name);
+            const suffix = node.isDir ? '/' : '';
+            lines.push(prefix + connector + node.name + suffix);
         }
 
         const childEntries = Array.from(node.children.values());
-        // Sort: dirs first
+        // Sort: dirs first, then alphabetical
         childEntries.sort((a, b) => {
             if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
             return a.name.localeCompare(b.name);

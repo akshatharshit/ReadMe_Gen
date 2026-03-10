@@ -81,7 +81,7 @@ async function fetchContentsDeep(
     repo: string,
     path = '',
     depth = 0,
-    maxDepth = 2,
+    maxDepth = 4,
     token?: string
 ): Promise<RepoContent[]> {
     if (depth > maxDepth) return [];
@@ -117,7 +117,7 @@ export async function fetchRepoData(owner: string, repo: string, token?: string)
     const [repoInfo, languages, contents, contributors] = await Promise.all([
         ghFetch<GHRepo>(`/repos/${owner}/${repo}`, token),
         ghFetch<Record<string, number>>(`/repos/${owner}/${repo}/languages`, token),
-        fetchContentsDeep(owner, repo, '', 0, 2, token),
+        fetchContentsDeep(owner, repo, '', 0, 4, token),
         ghFetch<GHContributor[]>(`/repos/${owner}/${repo}/contributors?per_page=10`, token).catch(() => []),
     ]);
 

@@ -116,6 +116,7 @@ export function analyzeRepo(data: RepoData): AnalysisResult {
     // Merge testing into techStack
     const fullStack = [...techStack, ...testingLibs];
 
+
     return {
         projectType,
         techStack: fullStack,

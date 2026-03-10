@@ -1,5 +1,5 @@
 import type { RepoData, AnalysisResult, ReadmeTemplate, ProjectType } from '../types';
-import { generateBadges, generateLanguageBadges } from '../utils/badgeGenerator';
+import { generateBadges, generateLanguageBadges, generateTechBadge } from '../utils/badgeGenerator';
 
 // ── Project type labels ────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
         useEmojis: true,
         showBadges: true,
         showToc: true,
-        showArchitecture: false,
+        showArchitecture: true,
         showContributors: true,
         verbose: true,
     },
@@ -50,7 +50,7 @@ const TEMPLATE_CONFIGS: Record<ReadmeTemplate, TemplateConfig> = {
         useEmojis: false,
         showBadges: true,
         showToc: false,
-        showArchitecture: false,
+        showArchitecture: true,
         showContributors: false,
         verbose: false,
     },
@@ -228,6 +228,7 @@ function buildTechStack(analysis: AnalysisResult, repo: RepoData, config: Templa
         lines.push('');
     }
 
+    // Group by category and render as badges
     const categories: Record<string, string[]> = {};
     for (const item of all) {
         const cat = item.category.charAt(0).toUpperCase() + item.category.slice(1);
@@ -236,7 +237,9 @@ function buildTechStack(analysis: AnalysisResult, repo: RepoData, config: Templa
     }
 
     for (const [cat, items] of Object.entries(categories)) {
-        lines.push(`**${cat}:** ${items.join(' · ')}`);
+        lines.push(`**${cat}:**`);
+        lines.push('');
+        lines.push(items.map((name) => generateTechBadge(name)).join(' '));
         lines.push('');
     }
 

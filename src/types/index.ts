@@ -86,7 +86,25 @@ export interface AnalysisResult {
 
 // ── README template types ──────────────────────────────────────────
 
-export type ReadmeTemplate = 'professional' | 'startup' | 'minimal' | 'opensource' | 'godtier';
+export type ReadmeTemplate = 'godtier' | 'professional' | 'startup' | 'opensource' | 'minimal' | 'cyberpunk';
+
+export interface SectionCustomization {
+    showBadges: boolean;
+    showArchitecture: boolean;
+    showMermaid: boolean;
+    showFeatures: boolean;
+    showTechStack: boolean;
+    showInstall: boolean;
+    showUsage: boolean;
+    showEnv: boolean;
+    showApi: boolean;
+    showRoadmap: boolean;
+    showContributors: boolean;
+    showStarHistory: boolean;
+    showDeployButtons: boolean;
+    showFaq: boolean;
+    showLicense: boolean;
+}
 
 // ── App state ──────────────────────────────────────────────────────
 
@@ -100,13 +118,18 @@ export interface AppState {
     loadingStep: string;
     error: string | null;
     pat: string | null;
+    customSections: SectionCustomization;
+    scanlinesEnabled: boolean;
 
     setUrl: (url: string) => void;
     setPat: (pat: string | null) => void;
     setMarkdown: (md: string) => void;
     setTemplate: (t: ReadmeTemplate) => void;
     setError: (err: string | null) => void;
+    setCustomSections: (sections: Partial<SectionCustomization>) => void;
+    toggleScanlines: () => void;
     generate: () => Promise<void>;
     regenerate: () => Promise<void>;
+    loadDemoRepo: () => void;
     reset: () => void;
 }

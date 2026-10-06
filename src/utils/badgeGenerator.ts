@@ -1,19 +1,31 @@
 /**
- * Generate shields.io badge markdown for a GitHub repository.
+ * Generate comprehensive shields.io badge markdown for a GitHub repository.
  */
-export function generateBadges(owner: string, repo: string): string {
-    const base = `https://img.shields.io/github`;
+export function generateBadges(owner: string, repo: string, style = 'for-the-badge'): string {
+    const base = 'https://img.shields.io/github';
     const badges = [
-        `[![GitHub Stars](${base}/stars/${owner}/${repo}?style=for-the-badge&logo=github&logoColor=white&color=0969da)](https://github.com/${owner}/${repo}/stargazers)`,
-        `[![GitHub Forks](${base}/forks/${owner}/${repo}?style=for-the-badge&logo=git&logoColor=white&color=8250df)](https://github.com/${owner}/${repo}/network/members)`,
-        `[![GitHub Issues](${base}/issues/${owner}/${repo}?style=for-the-badge&logo=github&logoColor=white&color=e5534b)](https://github.com/${owner}/${repo}/issues)`,
-        `[![GitHub License](${base}/license/${owner}/${repo}?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=2da44e)](https://github.com/${owner}/${repo}/blob/main/LICENSE)`,
-        `[![Last Commit](${base}/last-commit/${owner}/${repo}?style=for-the-badge&logo=git&logoColor=white&color=f9826c)](https://github.com/${owner}/${repo}/commits)`,
+        `[![GitHub Stars](${base}/stars/${owner}/${repo}?style=${style}&logo=github&logoColor=white&color=0969da)](https://github.com/${owner}/${repo}/stargazers)`,
+        `[![GitHub Forks](${base}/forks/${owner}/${repo}?style=${style}&logo=git&logoColor=white&color=8250df)](https://github.com/${owner}/${repo}/network/members)`,
+        `[![GitHub Issues](${base}/issues/${owner}/${repo}?style=${style}&logo=github&logoColor=white&color=e5534b)](https://github.com/${owner}/${repo}/issues)`,
+        `[![GitHub Pull Requests](${base}/issues-pr/${owner}/${repo}?style=${style}&logo=git&logoColor=white&color=2da44e)](https://github.com/${owner}/${repo}/pulls)`,
+        `[![GitHub License](${base}/license/${owner}/${repo}?style=${style}&logo=opensourceinitiative&logoColor=white&color=3fb950)](https://github.com/${owner}/${repo}/blob/main/LICENSE)`,
+        `[![Last Commit](${base}/last-commit/${owner}/${repo}?style=${style}&logo=git&logoColor=white&color=f9826c)](https://github.com/${owner}/${repo}/commits)`,
+        `[![Repo Size](${base}/repo-size/${owner}/${repo}?style=${style}&logo=buffer&logoColor=white&color=6e5494)](https://github.com/${owner}/${repo})`,
+        `[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=${style}&logo=git)](https://makeapullrequest.com)`,
     ];
     return badges.join('\n');
 }
 
-export function generateLanguageBadges(languages: Record<string, number>): string {
+export function generateDeployBadges(repoUrl: string): string {
+    return [
+        `[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=${encodeURIComponent(repoUrl)})`,
+        `[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template?referralCode=readme)`,
+        `[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=${encodeURIComponent(repoUrl)})`,
+        `[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=${encodeURIComponent(repoUrl)})`,
+    ].join(' ');
+}
+
+export function generateLanguageBadges(languages: Record<string, number>, style = 'for-the-badge'): string {
     const langColors: Record<string, string> = {
         TypeScript: '3178c6',
         JavaScript: 'f1e05a',
@@ -40,7 +52,7 @@ export function generateLanguageBadges(languages: Record<string, number>): strin
         .map((lang) => {
             const color = langColors[lang] || '555555';
             const encoded = encodeURIComponent(lang);
-            return `![${lang}](https://img.shields.io/badge/${encoded}-${color}?style=for-the-badge&logo=${encoded.toLowerCase()}&logoColor=white)`;
+            return `![${lang}](https://img.shields.io/badge/${encoded}-${color}?style=${style}&logo=${encoded.toLowerCase()}&logoColor=white)`;
         })
         .join(' ');
 }
@@ -70,14 +82,18 @@ const TECH_BADGE_MAP: Record<string, TechBadgeInfo> = {
     'Koa': { logo: 'koa', color: '33333D' },
     'NestJS': { logo: 'nestjs', color: 'E0234E' },
     'Electron': { logo: 'electron', color: '47848F' },
-    // Build tools
+    'Bun': { logo: 'bun', color: '000000' },
+    // Build tools & UI
     'TypeScript': { logo: 'typescript', color: '3178C6' },
     'Webpack': { logo: 'webpack', color: '8DD6F9' },
     'esbuild': { logo: 'esbuild', color: 'FFCF00' },
     'Rollup': { logo: 'rollupdotjs', color: 'EC4A3F' },
     'Parcel': { logo: 'parcel', color: '21374B' },
     'TailwindCSS': { logo: 'tailwindcss', color: '06B6D4' },
-    // Databases
+    'Shadcn UI': { logo: 'shadcnui', color: '000000' },
+    'Framer Motion': { logo: 'framer', color: '0055FF' },
+    'Lucide Icons': { logo: 'lucide', color: 'F56565' },
+    // Databases & ORMs
     'MongoDB': { logo: 'mongodb', color: '47A248' },
     'PostgreSQL': { logo: 'postgresql', color: '4169E1' },
     'MySQL': { logo: 'mysql', color: '4479A1' },
@@ -86,8 +102,8 @@ const TECH_BADGE_MAP: Record<string, TechBadgeInfo> = {
     'Firebase': { logo: 'firebase', color: 'FFCA28' },
     'Supabase': { logo: 'supabase', color: '3FCF8E' },
     'DynamoDB': { logo: 'amazondynamodb', color: '4053D6' },
-    // ORM / DB Toolkit
     'Prisma': { logo: 'prisma', color: '2D3748' },
+    'Drizzle ORM': { logo: 'drizzle', color: 'C5F74F' },
     'TypeORM': { logo: 'typeorm', color: 'FE0803' },
     'Sequelize': { logo: 'sequelize', color: '52B0E7' },
     // Auth
@@ -96,9 +112,18 @@ const TECH_BADGE_MAP: Record<string, TechBadgeInfo> = {
     'Auth0': { logo: 'auth0', color: 'EB5424' },
     'NextAuth.js': { logo: 'nextdotjs', color: '000000' },
     'Clerk': { logo: 'clerk', color: '6C47FF' },
-    // Realtime
+    'Supabase Auth': { logo: 'supabase', color: '3FCF8E' },
+    // Realtime & AI
     'Socket.IO': { logo: 'socketdotio', color: '010101' },
     'Pusher': { logo: 'pusher', color: '300D4F' },
+    'OpenAI': { logo: 'openai', color: '412991' },
+    'Anthropic': { logo: 'anthropic', color: '191919' },
+    // Cloud & DevOps
+    'Docker': { logo: 'docker', color: '2496ED' },
+    'Kubernetes': { logo: 'kubernetes', color: '326CE5' },
+    'GitHub Actions': { logo: 'githubactions', color: '2088FF' },
+    'AWS': { logo: 'amazonaws', color: '232F3E' },
+    'Vercel': { logo: 'vercel', color: '000000' },
     // Testing
     'Jest': { logo: 'jest', color: 'C21325' },
     'Vitest': { logo: 'vitest', color: '6E9F18' },
@@ -110,15 +135,13 @@ const TECH_BADGE_MAP: Record<string, TechBadgeInfo> = {
 
 /**
  * Generate a shields.io badge for a tech stack item.
- * Returns the badge markdown or just the name if no mapping found.
  */
-export function generateTechBadge(name: string): string {
+export function generateTechBadge(name: string, style = 'for-the-badge'): string {
     const info = TECH_BADGE_MAP[name];
     if (!info) {
-        // Fallback: generate a generic badge
         const encoded = encodeURIComponent(name);
-        return `![${name}](https://img.shields.io/badge/${encoded}-555555?style=for-the-badge&logoColor=white)`;
+        return `![${name}](https://img.shields.io/badge/${encoded}-22272e?style=${style}&logoColor=white)`;
     }
     const encoded = encodeURIComponent(name);
-    return `![${name}](https://img.shields.io/badge/${encoded}-${info.color}?style=for-the-badge&logo=${info.logo}&logoColor=white)`;
+    return `![${name}](https://img.shields.io/badge/${encoded}-${info.color}?style=${style}&logo=${info.logo}&logoColor=white)`;
 }

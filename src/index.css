@@ -1,32 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cli-bg: #050505;
-  --color-cli-black: #0a0a0a;
-  --color-cli-gray-dark: #1a1a1a;
-  --color-cli-gray: #4a4a4a;
-  --color-cli-gray-light: #888888;
-  --color-cli-white: #f0f0f0;
+  --color-cli-bg: #06080b;
+  --color-cli-black: #0b0f14;
+  --color-cli-gray-dark: #121820;
+  --color-cli-gray: #2d3748;
+  --color-cli-gray-light: #94a3b8;
+  --color-cli-white: #f8fafc;
 
-  --color-cli-green: #00ff41;
-  --color-cli-green-dim: #008f11;
-  --color-cli-amber: #ffb000;
-  --color-cli-cyan: #00e5ff;
-  --color-cli-red: #ff3333;
-  --color-cli-purple: #b538ff;
+  --color-cli-green: #00ff66;
+  --color-cli-green-dim: #059669;
+  --color-cli-amber: #f59e0b;
+  --color-cli-cyan: #06b6d4;
+  --color-cli-red: #f43f5e;
+  --color-cli-purple: #a855f7;
 
-  --color-cli-glow: rgba(0, 255, 65, 0.4);
-  --color-cli-glow-cyan: rgba(0, 229, 255, 0.4);
-  --color-cli-glow-purple: rgba(181, 56, 255, 0.4);
+  --color-cli-glow: rgba(0, 255, 102, 0.35);
+  --color-cli-glow-cyan: rgba(6, 182, 212, 0.35);
+  --color-cli-glow-purple: rgba(168, 85, 247, 0.35);
 
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Space Grotesk', monospace;
 }
 
 @layer base {
-  * {
-    border-radius: 0 !important;
-  }
-
   /* Custom God-Tier Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -34,31 +30,38 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-cli-black);
-    border-left: 1px solid var(--color-cli-gray);
+    background: #0b0f14;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-cli-green-dim);
-    box-shadow: 0 0 10px var(--color-cli-glow);
+    background: rgba(0, 255, 102, 0.3);
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-cli-green);
+    background: #00ff66;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
   }
 
   body {
-    @apply text-cli-green font-mono antialiased;
-    background: #050505;
-    background: radial-gradient(circle at center, #0a100a 0%, var(--color-cli-bg) 100%);
+    color: #00ff66;
+    font-family: var(--font-mono);
+    background-color: #06080b;
+    background-image: 
+      radial-gradient(ellipse at 50% 0%, rgba(0, 255, 102, 0.08) 0%, transparent 60%),
+      radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 20% 40%, rgba(168, 85, 247, 0.04) 0%, transparent 40%);
+    background-attachment: fixed;
     min-height: 100vh;
     font-size: 14px;
     letter-spacing: -0.01em;
     position: relative;
+    overflow-x: hidden;
   }
 
-  /* CLI CRT Scanline Effect */
-  body::after {
+  /* CRT Scanline Overlay */
+  body.scanlines-active::after {
     content: " ";
     display: block;
     position: fixed;
@@ -66,311 +69,354 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%,
-        rgba(0, 0, 0, 0.1) 50%);
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
     z-index: 999;
-    background-size: 100% 4px;
+    background-size: 100% 3px;
     pointer-events: none;
+    opacity: 0.7;
   }
 
   ::selection {
-    background: var(--color-cli-green);
-    color: var(--color-cli-bg);
+    background: rgba(0, 255, 102, 0.25);
+    color: #ffffff;
   }
 
   input,
   textarea,
   button {
-    @apply font-mono;
-    border-radius: 0 !important;
+    font-family: var(--font-mono);
   }
 }
 
-/* ── CLI specific classes ────────────────────────────────────────── */
+/* ── Cyber-Luxe Specific Classes ─────────────────────────────────── */
 
 .text-shadow-glow {
-  text-shadow: 0 0 5px var(--color-cli-glow);
+  text-shadow: 0 0 8px var(--color-cli-glow);
+}
+
+.text-shadow-cyan {
+  text-shadow: 0 0 8px var(--color-cli-glow-cyan);
 }
 
 .cli-border {
-  border: 1px solid var(--color-cli-gray);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .cli-border-active {
-  border: 1px solid var(--color-cli-green);
-  box-shadow: 0 0 10px var(--color-cli-glow), inset 0 0 5px var(--color-cli-glow);
+  border: 1px solid #00ff66;
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.25), inset 0 0 8px rgba(0, 255, 102, 0.1);
   animation: border-pulse 3s infinite alternate;
 }
 
 @keyframes border-pulse {
   0% {
-    box-shadow: 0 0 5px var(--color-cli-glow), inset 0 0 2px var(--color-cli-glow);
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.2), inset 0 0 4px rgba(0, 255, 102, 0.05);
   }
-
   100% {
-    box-shadow: 0 0 15px var(--color-cli-glow), inset 0 0 8px var(--color-cli-glow);
-    border-color: #33ff55;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.35), inset 0 0 10px rgba(0, 255, 102, 0.15);
+    border-color: #38ef7d;
   }
-}
-
-.cli-text-dim {
-  color: var(--color-cli-gray-light);
 }
 
 .cli-panel {
-  @apply bg-cli-black border border-cli-gray p-4 relative overflow-hidden transition-all duration-300;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  background: rgba(11, 15, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cli-panel:hover {
-  border-color: var(--color-cli-green-dim);
-  box-shadow: 0 4px 20px rgba(0, 255, 65, 0.05);
+  border-color: rgba(0, 255, 102, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 255, 102, 0.08);
 }
 
 .cli-button {
-  @apply px-4 py-2 bg-cli-black text-cli-green border border-cli-green relative overflow-hidden transition-all duration-300;
-  box-shadow: 0 0 5px var(--color-cli-glow);
-  text-shadow: 0 0 2px var(--color-cli-green);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: bold;
-}
-
-.cli-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, var(--color-cli-glow), transparent);
-  transition: all 0.4s ease;
-  z-index: 0;
-}
-
-.cli-button:hover::before {
-  left: 100%;
+  background: rgba(0, 255, 102, 0.08);
+  color: #00ff66;
+  border: 1px solid rgba(0, 255, 102, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
 }
 
 .cli-button:hover:not(:disabled) {
-  @apply bg-cli-green text-cli-bg border-cli-green;
-  box-shadow: 0 0 15px var(--color-cli-green), 0 0 20px var(--color-cli-glow);
-  text-shadow: none;
+  background: #00ff66;
+  color: #06080b;
+  border-color: #00ff66;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.4), 0 0 5px rgba(0, 255, 102, 0.8);
   transform: translateY(-1px);
 }
 
 .cli-button:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 0 5px var(--color-cli-green);
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.3);
 }
 
 .cli-button:disabled {
-  @apply border-cli-gray text-cli-gray cursor-not-allowed shadow-none bg-cli-black;
-  text-shadow: none;
-  opacity: 0.5;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #4a5568;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .cli-button-secondary {
-  @apply px-4 py-2 bg-cli-black text-cli-cyan border border-cli-gray transition-all shadow-none duration-300;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  background: rgba(6, 182, 212, 0.06);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
 .cli-button-secondary:hover:not(:disabled) {
-  @apply border-cli-cyan text-cli-bg bg-cli-cyan;
-  box-shadow: 0 0 20px var(--color-cli-cyan), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  background: #06b6d4;
+  color: #06080b;
+  border-color: #06b6d4;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+  transform: translateY(-1px);
 }
 
 .cli-button-secondary:disabled {
-  @apply border-cli-gray text-cli-gray cursor-not-allowed shadow-none;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #4a5568;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* ── Input ────────────────────────────────────────────────────────── */
-
 .cli-input {
-  @apply w-full bg-transparent text-cli-green border-none focus:outline-none focus:ring-0;
-  caret-color: var(--color-cli-green);
+  background: transparent;
+  color: #f8fafc;
+  outline: none;
+  caret-color: #00ff66;
 }
 
 .cli-input::placeholder {
-  @apply text-cli-gray-light;
+  color: #64748b;
 }
 
-/* ── Markdown preview prose (man page style) ─────────────────────── */
+/* ── Markdown Preview Typography (GitHub Dark Styled) ─────────────── */
 
 .markdown-body {
-  @apply text-cli-white leading-relaxed;
+  color: #e2e8f0;
+  line-height: 1.7;
 }
 
 .markdown-body h1,
 .markdown-body h2,
-.markdown-body h3 {
-  @apply font-bold text-cli-green uppercase mt-6 mb-3;
+.markdown-body h3,
+.markdown-body h4 {
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
 }
 
 .markdown-body h1 {
-  @apply text-xl border-b border-cli-green pb-1;
+  font-size: 1.75rem;
+  border-bottom: 1px solid rgba(0, 255, 102, 0.3);
+  padding-bottom: 0.5rem;
+  color: #00ff66;
+  text-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
 }
 
 .markdown-body h2 {
-  @apply text-lg border-b border-cli-gray pb-1;
+  font-size: 1.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.35rem;
+  color: #38bdf8;
 }
 
 .markdown-body h3 {
-  @apply text-base text-cli-amber;
+  font-size: 1.15rem;
+  color: #fbbf24;
+}
+
+.markdown-body h4 {
+  font-size: 1rem;
+  color: #a78bfa;
 }
 
 .markdown-body p {
-  @apply mb-4;
+  margin-bottom: 1rem;
+  color: #cbd5e1;
 }
 
 .markdown-body a {
-  @apply text-cli-cyan underline underline-offset-2;
+  color: #38bdf8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: all 0.15s ease;
 }
 
 .markdown-body a:hover {
-  @apply bg-cli-cyan text-cli-bg no-underline;
+  color: #00ff66;
+  text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
 }
 
 .markdown-body ul,
 .markdown-body ol {
-  @apply mb-4 pl-6;
-}
-
-.markdown-body li {
-  @apply mb-1;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
 }
 
 .markdown-body ul li {
   list-style-type: square;
-  color: var(--color-cli-green);
+  color: #00ff66;
+  margin-bottom: 0.35rem;
 }
 
-.markdown-body ul li span {
-  color: var(--color-cli-white);
-  /* Keep text white while bullet is green */
+.markdown-body ul li span,
+.markdown-body ul li strong,
+.markdown-body ul li a {
+  color: #e2e8f0;
 }
 
 .markdown-body code {
-  @apply px-1.5 py-0.5 bg-cli-gray-dark text-cli-amber;
+  padding: 0.2em 0.4em;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fbbf24;
+  border-radius: 4px;
+  font-size: 0.9em;
 }
 
 .markdown-body pre {
-  @apply mb-4 p-4 overflow-x-auto bg-cli-gray-dark border border-cli-gray text-cli-white;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  background: #0d1219;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #f1f5f9;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .markdown-body pre code {
-  @apply p-0 bg-transparent text-cli-white;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
 }
 
+/* GitHub style callout boxes */
 .markdown-body blockquote {
-  @apply mb-4 pl-4 text-cli-gray-light border-l-2 border-cli-gray-light;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #00ff66;
+  background: rgba(0, 255, 102, 0.05);
+  border-radius: 0 6px 6px 0;
+  color: #cbd5e1;
 }
 
 .markdown-body table {
-  @apply w-full mb-4 text-sm border-collapse;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .markdown-body th {
-  @apply text-left font-bold text-cli-green px-4 py-2 border border-cli-gray bg-cli-gray-dark;
+  text-align: left;
+  font-weight: 700;
+  color: #38bdf8;
+  padding: 0.65rem 1rem;
+  background: rgba(18, 24, 32, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .markdown-body td {
-  @apply px-4 py-2 border border-cli-gray;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+
+.markdown-body tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .markdown-body hr {
-  @apply my-6 border-cli-gray border-dashed;
+  margin: 1.5rem 0;
+  border: none;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
 }
 
-.markdown-body strong {
-  @apply font-bold text-cli-white;
+.markdown-body details {
+  background: rgba(14, 20, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-body details summary {
+  cursor: pointer;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.markdown-body details[open] summary {
+  margin-bottom: 0.75rem;
 }
 
 .markdown-body img {
-  @apply border border-cli-gray max-w-full;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ── Editor (Vim style) ──────────────────────────────────────────── */
+/* ── Editor (Vim / Monaco style) ─────────────────────────────────── */
 
 .editor-textarea {
-  @apply w-full h-full p-4 bg-transparent text-cli-green resize-none outline-none;
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  background: #090d12;
+  color: #38ef7d;
+  resize: none;
+  outline: none;
   tab-size: 2;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-family: var(--font-mono);
 }
 
-/* ── Animations ──────────────────────────────────────────────────── */
+/* ── Micro-Animations ────────────────────────────────────────────── */
 
-@keyframes blink {
-
-  0%,
-  100% {
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
     opacity: 1;
   }
-
   50% {
-    opacity: 0;
+    transform: scale(1.4);
+    opacity: 0.5;
   }
 }
 
-.animate-blink {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes matrix-fade {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-matrix {
-  animation: matrix-fade 0.15s ease-out forwards;
+.animate-pulse-dot {
+  animation: pulse-dot 1.8s infinite;
 }
 
 @keyframes glitch {
-  0% {
-    transform: translate(0)
-  }
-
-  20% {
-    transform: translate(-2px, 2px)
-  }
-
-  40% {
-    transform: translate(-2px, -2px)
-  }
-
-  60% {
-    transform: translate(2px, 2px)
-  }
-
-  80% {
-    transform: translate(2px, -2px)
-  }
-
-  100% {
-    transform: translate(0)
-  }
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
 }
 
 .hover\:animate-glitch:hover {
   animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
   color: #fff;
   text-shadow: 2px 0 var(--color-cli-red), -2px 0 var(--color-cli-cyan);
-}
-
-/* ── Split view specific ─────────────────────────────────────────── */
-
-.tmux-pane-border {
-  @apply border-cli-gray;
-}
-
-.tmux-pane-active {
-  @apply border-cli-green;
 }
